@@ -92,56 +92,21 @@ _set_display_key_value() {
     _value="${3}" \
     _cmd=()
   _msg_info \
-    "Setting value ${_value} for key ${_key} of profile '${_profile}'"
-  _cmd=(
-    pm
-    sqlite3
-      "${_db}"
-      "\"${_db_cmd}\""
-  )
-  _msg_info \
-    "Running ${_cmd[*]}"
-  su \
-    -c \
-    "${_cmd[*]}"
-}
-
-_flush_table() {
-  local \
-    _db="${1}" \
-    _table="${2}" \
-    _delete \
-    _delete_1 \
-    _delete_2
-  _msg_info \
-    "flushing table ${_table} in db '${_db}'"
-  _delete_1="Delete from ${_table};"
-  _delete_2="DELETE FROM SQLITE_SEQUENCE WHERE name='${_table}';"
-  _delete="DELETE FROM ${_table};"
-  _cmd=(
-    sqlite3
-      "${_db}"
-      "'${_delete}'"
-  )
-  su \
-    -c \
-    "${_cmd[*]}"
-}
-
-_account_key() {
-  local \
-    _account="${1}" \
-    _position="${2}" 
-  echo \
-    "${_account}" | \
-    awk \
-      -F \
-        "(" \
-      '{print $2}' | \
-      awk \
-        -F \
-          "," \
-        '{print $'"${_position}"'}'
+    "Setting value ${_value} for key ${_key} of display '${_display}'"
+  if [[ "${_key}" == "status" ]]; then
+    if [[ "$(display-status)" != "${_value}" ]]; then
+      _cmd=(
+        input
+          keyevent
+          KEYCODE_POWER
+      )
+      _msg_info \
+        "Running ${_cmd[*]}"
+      su \
+        -c \
+        "${_cmd[*]}"
+    fi
+  fi
 }
 
 # Get display settings key
@@ -294,20 +259,14 @@ _set \
 if (( 1 < $# )); then
   _set \
     "target" \
-    "display" \
+    "key" \
     "${2}"
 fi
 if (( 2 < $# )); then
   _set \
     "target" \
-    "key" \
-    "${3}"
-fi
-if (( 3 < $# )); then
-  _set \
-    "target" \
     "value" \
-    "${4}"
+    "${3}"
 fi
 _set_overrides
 _config_user_init \
