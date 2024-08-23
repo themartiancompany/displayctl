@@ -27,7 +27,7 @@ _requirements() {
     _app
   _check_cmd \
     'display-status' \
-    'android-utils'
+    'android-display-utils'
   _check_cmd \
     "su" \
     "tsu"

@@ -16,7 +16,7 @@ check: shellcheck
 shellcheck:
 	shellcheck -s bash $(SCRIPT_FILES)
 
-install: displayctl install-doc
+install: install-displayctl install-doc
 
 install-doc:
 
