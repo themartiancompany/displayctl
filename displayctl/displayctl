@@ -106,6 +106,10 @@ _set_display_key_value() {
         -c \
         "${_cmd[*]}"
     fi
+  elif [[ "${_key}" == "scale" ]]; then
+    display-scale \
+      set \
+        "${_value}"
   fi
 }
 
@@ -119,6 +123,8 @@ _get_display_key_value() {
     _account
   if [[ "${_key}" == "status" ]]; then
     display-status
+  elif [[ "${_key}" == "scale" ]]; then
+    display-scale
   fi
 }
 
@@ -164,6 +170,7 @@ usage:
        <key>
        <value>
   keys:
+    scale                 Scale value, float between 0 and 1.
     status                Can be 'off' or 'on'.
   options:
      -d <display>         Display to select.
