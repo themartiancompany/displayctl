@@ -93,7 +93,19 @@ _set_display_key_value() {
     _cmd=()
   _msg_info \
     "Setting value ${_value} for key ${_key} of display '${_display}'"
-  if [[ "${_key}" == "status" ]]; then
+  if [[ "${_key}" == "dpi" ]]; then
+    display-dpi \
+      set \
+        "${_value}"
+  elif [[ "${_key}" == "form-factor" ]]; then
+    display-fotm-factor \
+      set \
+        "${_value}"
+  elif [[ "${_key}" == "scale" ]]; then
+    display-scale \
+      set \
+        "${_value}"
+  elif [[ "${_key}" == "status" ]]; then
     if [[ "$(display-status)" != "${_value}" ]]; then
       _cmd=(
         input
@@ -106,10 +118,6 @@ _set_display_key_value() {
         -c \
         "${_cmd[*]}"
     fi
-  elif [[ "${_key}" == "scale" ]]; then
-    display-scale \
-      set \
-        "${_value}"
   fi
 }
 
@@ -121,10 +129,16 @@ _get_display_key_value() {
     _key="${2}" \
     _msg=() \
     _account
-  if [[ "${_key}" == "status" ]]; then
-    display-status
+  if [[ "${_key}" == "aspect-ratio" ]]; then
+    "display-${_key}"
+  elif [[ "${_key}" == "dpi" ]]; then
+    "display-${_key}"
+  elif [[ "${_key}" == "form-factor" ]]; then
+    "display-${_key}"
   elif [[ "${_key}" == "scale" ]]; then
-    display-scale
+    "display-${_key}"
+  elif [[ "${_key}" == "status" ]]; then
+    "display-${_key}"
   fi
 }
 
@@ -170,6 +184,9 @@ usage:
        <key>
        <value>
   keys:
+    aspect-ratio          Screen aspect ratio.
+    dpi                   Pixel density per inch.
+    form-factor           Display fonm factor (native, larger, smaller).
     scale                 Scale value, float between 0 and 1.
     status                Can be 'off' or 'on'.
   options:
