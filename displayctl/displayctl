@@ -2,12 +2,11 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-_bin="$( \
+_bin="$(
   dirname \
-    "$( \
-      command \
-        -v \
-	  "env")")"
+    "$(command \
+         -v \
+	 "env")")"
 _lib="${_bin}/../lib"
 source \
   "${_lib}/libcrash-bash/crash-bash"
@@ -36,10 +35,7 @@ _requirements() {
 _get_conf_dir_path() {
   local \
     _dir
-  _dir="${HOME}/.config/$( \
-    _get \
-      "app" \
-      "name")"
+  _dir="${HOME}/.config/${app_name}"
   echo \
     "${_dir}"
 }
@@ -54,30 +50,15 @@ _displayctl() {
   if [[ "${_command}" == "get" ]]; then
     _cmd="_${_command}_display_key_value"
     _args+=(
-      "$( \
-        _get \
-          "target" \
-          "display")"
-      "$( \
-        _get \
-          "target" \
-          "key")"
+      "${target_display}"
+      "${target_key}"
       )
   elif [[ "${_command}" == "set" ]]; then
     _cmd="_${_command}_display_key_value"
     _args+=(
-      "$( \
-        _get \
-          "target" \
-          "display")"
-      "$( \
-        _get \
-          "target" \
-          "key")"
-      "$( \
-        _get \
-          "target" \
-          "value")"
+      "${target_display}"
+      "${target_key}"
+      "${target_value}"
     )
   fi
   "${_cmd}" \
@@ -228,20 +209,18 @@ _show_config() {
       '%(%FT%R%z)T' \
       "${SOURCE_DATE_EPOCH}"
   _msg_info "${app_name} configuration"
-  _msg_info "           Operation date:   $(_get "_get" "date")"
-  _msg_info "           Target command:   $(_get "target" "command")"
-  _msg_info "           Target display:   $(_get "target" "display")"
-  _msg_info "               Target key:   $(_get "target" "key")"
-  _msg_info "             Target value:   $(_get "target" "value")"
+  _msg_info "           Operation date:   ${_get_date}"
+  _msg_info "           Target command:   ${target_command}"
+  _msg_info "           Target display:   ${target_display}"
+  _msg_info "               Target key:   ${target_key}"
+  _msg_info "             Target value:   ${target_value}"
 }
 
 _globals
 _global_variables
 _requirements
 _config_user_init \
-  "$(_get \
-       "app" \
-       "name")"
+  "${app_name}"
 # shellcheck disable=SC2034
 while \
   getopts \
@@ -267,7 +246,7 @@ while \
   esac
 done
 shift \
-  $(( \
+  $((
     OPTIND - 1 \
   ))
 if (( $# < 1 )); then
@@ -278,34 +257,19 @@ if (( $# < 1 )); then
   _usage \
     1
 fi
-_set \
-  "target" \
-  "command" \
-  "${1}"
+target_command="${1}"
 if (( 1 < $# )); then
-  _set \
-    "target" \
-    "key" \
-    "${2}"
+  target_key="${2}"
 fi
 if (( 2 < $# )); then
-  _set \
-    "target" \
-    "value" \
-    "${3}"
+target_value="${3}"
 fi
 _set_overrides
 _config_user_init \
-  "$( \
-    _get \
-      "app" \
-      "name")"
+  "${app_name}"
 _show_config
 app_opts=(
-  "$( \
-    _get \
-      "target" \
-      "command")"
+  "${target_command}"
 )
 _displayctl \
   "${app_opts[@]}"
