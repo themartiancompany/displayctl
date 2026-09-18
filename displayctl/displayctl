@@ -98,7 +98,7 @@ _set_display_key_value() {
       set \
         "${_value}"
   elif [[ "${_key}" == "form-factor" ]]; then
-    display-fotm-factor \
+    display-form-factor \
       set \
         "${_value}"
   elif [[ "${_key}" == "scale" ]]; then
@@ -110,7 +110,7 @@ _set_display_key_value() {
       _cmd=(
         input
           keyevent
-          KEYCODE_POWER
+            "KEYCODE_POWER"
       )
       _msg_info \
         "Running ${_cmd[*]}"
@@ -172,11 +172,12 @@ _usage() {
         ENDUSAGETEXT || true
 Manage displays
 usage:
-  $(_get "app" "name")
+  ${app_name}
     [options]
     <command>
     <key>
     (<value>)
+
   commands:
      get                  Get configuration value
        <key>
@@ -189,6 +190,7 @@ usage:
     form-factor           Display fonm factor (native, larger, smaller).
     scale                 Scale value, float between 0 and 1.
     status                Can be 'off' or 'on'.
+
   options:
      -d <display>         Display to select.
                           Default: $(_get "target" "display")
